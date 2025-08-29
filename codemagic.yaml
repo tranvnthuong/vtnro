@@ -1,17 +1,17 @@
 workflows:
-  unity-ios:
-    name: Unity iOS Build
+  unity-ios-unsigned:
+    name: Unity iOS Unsigned IPA
     environment:
       xcode: latest
       vars:
         XCODE_PROJECT: "Unity-iPhone.xcodeproj"
         XCODE_SCHEME: "Unity-iPhone"
     scripts:
-      - name: Build ipa
+      - name: Build unsigned ipa
         script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME" \
-            --export-options-plist "export_options.plist"
+            --no-sign
     artifacts:
       - build/ios/ipa/*.ipa
