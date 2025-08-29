@@ -7,11 +7,39 @@ workflows:
         XCODE_PROJECT: "Unity-iPhone.xcodeproj"
         XCODE_SCHEME: "Unity-iPhone"
     scripts:
-      - name: Build unsigned ipa
+      - name: Archive without signing
         script: |
-          xcode-project build-ipa \
-            --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME" \
-            --no-sign
+          xcodebuild \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -archivePath build/Unity-iPhone.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Export unsigned ipa
+        script: |
+          # tạo exportOptions.plist tối giản
+          cat <<EOF > export_options.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>development</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>compileBitcode</key>
+            <false/>
+            <key>stripSwiftSymbols</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/Unity-iPhone.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist export_options.plist \
+            CODE_SIGNING_ALLOWED=NO
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ipa/*.ipa
