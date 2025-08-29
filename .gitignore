@@ -1,0 +1,15 @@
+# Unity
+Library/
+Libraries/
+Temp/
+Obj/
+Build/
+Logs/
+UserSettings/
+
+# Xcode
+*.xcworkspace
+build/
+*.DS_Store
+*.tmp
+*.swp
