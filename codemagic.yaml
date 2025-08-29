@@ -5,7 +5,7 @@ workflows:
       groups:
         - ios_credentials # chứa APP_STORE_CONNECT_PRIVATE_KEY, CERT, PROFILE...
       xcode: latest
-      unity: latest
+      unity: 2023.3.23f1
     scripts:
       - name: Activate Unity License
         script: |
