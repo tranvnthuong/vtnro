@@ -1,0 +1,19 @@
+workflows:
+  ios-unity-workflow:
+    name: iOS Unity Build
+    environment:
+      groups:
+        - ios_credentials # chứa APP_STORE_CONNECT_PRIVATE_KEY, CERT, PROFILE...
+      xcode: latest
+      unity: latest
+    scripts:
+      - name: Activate Unity License
+        script: |
+          unity-editor -logFile -quit -batchmode -serial ${UNITY_SERIAL} -username ${UNITY_EMAIL} -password ${UNITY_PASSWORD}
+      - name: Build Unity iOS Project
+        script: |
+          unity-editor -batchmode -nographics -quit -projectPath . -executeMethod BuildScript.BuildiOS
+      - name: Build IPA from Xcode
+        script: |
+          xcodebuild -workspace ios/Unity-iPhone.xcworkspace -scheme Unity-iPhone -sdk iphoneos -configuration Release archive -archivePath $CM_BUILD_DIR/build/Unity.xcarchive
+          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/build/Unity.xcarchive -exportOptionsPlist exportOptions.plist -exportPath $CM_BUILD_DIR/build
